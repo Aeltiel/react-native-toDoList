@@ -1,6 +1,10 @@
 [
     {"id" : 1, "title" : "Sortir le chien", "isCompleted" : true},
-    {"id" : 1, "title" : "Aller chez le garagiste", "isCompleted" : false},
-    {"id" : 1, "title" : "Faire les courses", "isCompleted" : true},
-    {"id" : 1, "title" : "Appeler le vétérinaire", "isCompleted" : false}
+    {"id" : 2, "title" : "Aller chez le garagiste", "isCompleted" : false},
+    {"id" : 3, "title" : "Faire les courses", "isCompleted" : true},
+    {"id" : 4, "title" : "Appeler le vétérinaire", "isCompleted" : false},
+    {"id" : 5, "title" : "Sortir le chien", "isCompleted" : true},
+    {"id" : 6, "title" : "Aller chez le garagiste", "isCompleted" : true},
+    {"id" : 7, "title" : "Faire les courses", "isCompleted" : false},
+    {"id" : 8, "title" : "Appeler le vétérinaire", "isCompleted" : true}
 ]
