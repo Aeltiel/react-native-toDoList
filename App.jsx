@@ -3,11 +3,13 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import appStyle from "./Styles/app.style";
 import Header from "./Components/Header";
 import Card from "./Components/Card";
+import BottomMenu from "./Components/BottomMenu";
 import toDoArray from "./Data/Todo.json";
 import { useState } from "react";
 
 export default function App() {
   const [todoList, setTodoList] = useState(toDoArray);
+  const [selectedTabName, setSelectedTabName] = useState("all");
 
   //fonction pour update le isCompleted des data
   function upDateToDo(todo) {
@@ -45,7 +47,10 @@ export default function App() {
             <ScrollView>{mapToDo()}</ScrollView>
           </View>
           <View style={appStyle.footer}>
-            <Text>Footer</Text>
+            <BottomMenu
+              selectedTabName={selectedTabName}
+              onPress={setSelectedTabName}
+            />
           </View>
         </SafeAreaView>
       </SafeAreaProvider>
