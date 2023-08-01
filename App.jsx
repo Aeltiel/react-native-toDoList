@@ -7,12 +7,30 @@ import toDoArray from "./Data/Todo.json";
 import { useState } from "react";
 
 export default function App() {
-  const [todo, setToDo] = useState(toDoArray);
+  const [todoList, setTodoList] = useState(toDoArray);
 
+  //fonction pour update le isCompleted des data
+  function upDateToDo(todo) {
+    //const pour récupéré la todo, en faire une copie et modifié l'attribut voulu
+    const updatedToDo = { ...todo, isCompleted: !todo.isCompleted };
+
+    //const pour trouver dans les data la todo équivalent à celle récupéré précédemment
+    const indexToUpdate = todoList.findIndex(
+      (todo) => todo.id === updatedToDo.id
+    );
+
+    //création d'un nouveau tableau qui sera celui mis à jour
+    const updatedTodoList = [...todoList];
+
+    updatedTodoList[indexToUpdate] = updatedToDo;
+    setTodoList(updatedTodoList);
+  }
+
+  //fonction qui permet de boucler sur tableau afin d'afficher les objets dans le composant Card
   function mapToDo() {
-    return todo.map((todo) => (
+    return todoList.map((todo) => (
       <View style={appStyle.cardItem} key={todo.id}>
-        <Card todo={todo} />
+        <Card onPress={upDateToDo} todo={todo} />
       </View>
     ));
   }
