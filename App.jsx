@@ -1,15 +1,20 @@
 import { Alert, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import Dialog from "react-native-dialog";
+import uuid from "react-native-uuid";
+import { useState } from "react";
+import toDoArray from "./Data/Todo.json";
 import appStyle from "./Styles/app.style";
 import Header from "./Components/Header";
 import Card from "./Components/Card";
 import BottomMenu from "./Components/BottomMenu";
-import toDoArray from "./Data/Todo.json";
-import { useState } from "react";
+import AddToDo from "./Components/AddToDo";
 
 export default function App() {
   const [todoList, setTodoList] = useState(toDoArray);
   const [selectedTabName, setSelectedTabName] = useState("all");
+  const [showDialog, setShowDialog] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   //fonction pour update le isCompleted des data
   function upDateToDo(todo) {
@@ -58,6 +63,22 @@ export default function App() {
     ]);
   }
 
+  //function pour ouvrir une boite de dialog pour ajouter une todo
+  function showAddDialog() {
+    setShowDialog(true);
+  }
+
+  //fonction pour ajouter une nouvelle todo
+  function addToDo() {
+    const newTodo = {
+      id: uuid.v4(),
+      title: inputValue,
+      isCompleted: false,
+    };
+    setTodoList([...todoList, newTodo]);
+    setShowDialog(false);
+  }
+
   //fonction qui permet de boucler sur tableau afin d'afficher les objets dans le composant Card
   function mapToDo() {
     return filteredList().map((todo) => (
@@ -73,18 +94,36 @@ export default function App() {
           <View style={appStyle.header}>
             <Header />
           </View>
+
           <View style={appStyle.body}>
             <ScrollView>{mapToDo()}</ScrollView>
           </View>
-          <View style={appStyle.footer}>
-            <BottomMenu
-              selectedTabName={selectedTabName}
-              onPress={setSelectedTabName}
-              todoList={todoList}
-            />
-          </View>
+
+          <AddToDo onPress={showAddDialog} />
         </SafeAreaView>
       </SafeAreaProvider>
+      <View style={appStyle.footer}>
+        <BottomMenu
+          selectedTabName={selectedTabName}
+          onPress={setSelectedTabName}
+          todoList={todoList}
+        />
+      </View>
+      <Dialog.Container
+        visible={showDialog}
+        onBackdropPress={() => setShowDialog(false)}
+      >
+        <Dialog.Title>Créer une tâche</Dialog.Title>
+        <Dialog.Description>
+          Choisis un nom pour la nouvelle tâche
+        </Dialog.Description>
+        <Dialog.Input onChangeText={setInputValue} />
+        <Dialog.Button
+          disabled={inputValue.trim().length === 0}
+          label="Créer"
+          onPress={addToDo}
+        />
+      </Dialog.Container>
     </>
   );
 }
