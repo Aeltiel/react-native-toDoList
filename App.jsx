@@ -2,19 +2,62 @@ import { Alert, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Dialog from "react-native-dialog";
 import uuid from "react-native-uuid";
-import { useState } from "react";
-import toDoArray from "./Data/Todo.json";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import appStyle from "./Styles/app.style";
 import Header from "./Components/Header";
 import Card from "./Components/Card";
 import BottomMenu from "./Components/BottomMenu";
 import AddToDo from "./Components/AddToDo";
 
+//variable pour géré l'activation du useEffect de sauvegarde des todo
+let isFirstRender = true;
+let loadUpdate = false;
+
 export default function App() {
-  const [todoList, setTodoList] = useState(toDoArray);
+  const [todoList, setTodoList] = useState([]);
   const [selectedTabName, setSelectedTabName] = useState("all");
   const [showDialog, setShowDialog] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    loadTodoList();
+  }, []);
+
+  useEffect(() => {
+    if (loadUpdate) {
+      loadUpdate = false;
+    } else {
+      if (!isFirstRender) {
+        saveTodos();
+      } else {
+        isFirstRender = false;
+      }
+    }
+  }, [todoList]);
+
+  //function qui permet de sauvegarder la todo list sur le tél
+  async function saveTodos() {
+    try {
+      await AsyncStorage.setItem("@todoList", JSON.stringify(todoList));
+    } catch (error) {
+      alert("Erreur" + error);
+    }
+  }
+
+  //fonction pour charger les données
+  async function loadTodoList() {
+    try {
+      const stringifiedTodoList = await AsyncStorage.getItem("@todoList");
+      if (stringifiedTodoList !== null) {
+        const parsedTodoList = JSON.parse(stringifiedTodoList);
+        loadUpdate = true;
+        setTodoList(parsedTodoList);
+      }
+    } catch (error) {
+      alert("Erreur" + error);
+    }
+  }
 
   //fonction pour update le isCompleted des data
   function upDateToDo(todo) {
