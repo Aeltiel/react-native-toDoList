@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import appStyle from "./Styles/app.style";
 import Header from "./Components/Header";
@@ -40,11 +40,29 @@ export default function App() {
     }
   }
 
+  //function pour supprimer une todo
+  function deleteTodo(todo) {
+    Alert.alert("Suppression", "Supprimer cette tâche ?", [
+      //les deux paire d'accolade correspondent aux boutons présent dans l'alert
+      {
+        text: "Supprimer",
+        style: "destructive",
+        onPress: () => {
+          setTodoList(todoList.filter((todoD) => todo.id !== todoD.id));
+        },
+      },
+      {
+        text: "Annuler",
+        style: "cancel",
+      },
+    ]);
+  }
+
   //fonction qui permet de boucler sur tableau afin d'afficher les objets dans le composant Card
   function mapToDo() {
     return filteredList().map((todo) => (
       <View style={appStyle.cardItem} key={todo.id}>
-        <Card onPress={upDateToDo} todo={todo} />
+        <Card onPress={upDateToDo} todo={todo} onLongPress={deleteTodo} />
       </View>
     ));
   }
