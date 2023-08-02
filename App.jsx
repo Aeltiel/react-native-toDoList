@@ -28,9 +28,21 @@ export default function App() {
     setTodoList(updatedTodoList);
   }
 
+  //function pour récupéré le tableau de tache filtrer
+  function filteredList() {
+    switch (selectedTabName) {
+      case "all":
+        return todoList;
+      case "inProgress":
+        return todoList.filter((todo) => !todo.isCompleted);
+      case "done":
+        return todoList.filter((todo) => todo.isCompleted);
+    }
+  }
+
   //fonction qui permet de boucler sur tableau afin d'afficher les objets dans le composant Card
   function mapToDo() {
-    return todoList.map((todo) => (
+    return filteredList().map((todo) => (
       <View style={appStyle.cardItem} key={todo.id}>
         <Card onPress={upDateToDo} todo={todo} />
       </View>
@@ -50,6 +62,7 @@ export default function App() {
             <BottomMenu
               selectedTabName={selectedTabName}
               onPress={setSelectedTabName}
+              todoList={todoList}
             />
           </View>
         </SafeAreaView>
